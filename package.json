@@ -1,0 +1,29 @@
+{
+  "name": "cambio-de-monedas",
+  "version": "1.0.0",
+  "description": "Mini Proyecto de R/Argentina Programa  trabajando con API de casa de cambio",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fabrizio112/Cambio-de-Monedas.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fabrizio112/Cambio-de-Monedas/issues"
+  },
+  "homepage": "https://github.com/Fabrizio112/Cambio-de-Monedas#readme",
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "http-server": "^14.1.1",
+    "jquery": "^3.6.4"
+  },
+  "devDependencies": {
+    "cypress": "^12.8.1"
+  }
+}
