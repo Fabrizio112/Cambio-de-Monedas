@@ -12,13 +12,18 @@ let $botonDeComparar = document.querySelector("#comparar");
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// COMPARADOR DE DIVISAS     ////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+let contadorDeBotonComparar = 0;
 $botonDeComparar.addEventListener('click', () => {
+    if (contadorDeBotonComparar >= 1) {
+        eliminarAlgunElemento(document.querySelector(".contenedor-programa-comparar"))
+    }
     $("#container").append($(`<div class="contenedor-programa-comparar">
-    <h2 class="fs-1 text-uppercase p-3">Comparador de Divisas de Fabrizio</h2>
-    <label class="form-label mb-3 fs-4" for="">Ingrese la divisa :</label>
+    <h2 class="fs-1 text-uppercase p-3" id="titulo-comparador">Comparador de Divisas de Fabrizio</h2>
+    <label class="form-label mb-3 fs-4" id="label-comparador" for="">Ingrese la divisa :</label>
     <input class="form-control mb-4 text-center fs-4" type="text" id="input-divisa">
     <button class="btn btn-outline-primary px-5 fs-3" id="buscar">Buscar</button>
 </div>`))
+    contadorDeBotonComparar++;
     document.querySelector("#buscar").addEventListener('click', () => {
         let valorDelInput = (document.querySelector("#input-divisa").value).toUpperCase();
         if (contadorContenedor >= 1) {
@@ -32,7 +37,7 @@ $botonDeComparar.addEventListener('click', () => {
 })
 
 function traerValoresEnComparacion(a) {
-    fetch(`https://currency-conversion-and-exchange-rates.p.rapidapi.com/latest?from=${a}$&to=EUR%2CGBP%2CARS%2CUSD%2CCHF%2CJPY%2CHKD%2CCAD%2CMXN%2CCNY%2CAUD%2CBRL%2CRUB`, options)
+    fetch(`https://currency-conversion-and-exchange-rates.p.rapidapi.com/latest?base=${a}&to=EUR%2CGBP`, options)
         .then(respuesta => respuesta.json())
         .then(datos => {
             crearContenedoresDeDatos(datos)
@@ -43,6 +48,7 @@ function traerValoresEnComparacion(a) {
 let contadorContenedor = 0;
 function crearContenedoresDeDatos(a) {
     contadorContenedor++;
+    console.log(a.base)
     $(".container").append($(`<h1 id="titulo-divisa">${a.base} a la fecha ${a.date}</h1>`))
     $(".container").append($(`<div id="contenedor-de-divs"></div>`))
     Object.keys(a.rates).forEach((valor) => {
@@ -56,7 +62,9 @@ function crearContenedoresDeDatos(a) {
     })
     return contadorContenedor;
 }
-
+function eliminarAlgunElemento(a) {
+    a.remove();
+}
 function ocultarAlgunElemento(a) {
     a.clasList.add("d-none");
 }
@@ -72,7 +80,11 @@ function eliminarElContenedorConLasDivisas() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// CALCULADOR DE DIVISAS //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+let contadorDeBotonCalcular = 0;
 $botonDeCalcular.addEventListener('click', () => {
+    if (contadorDeBotonCalcular >= 1) {
+        eliminarAlgunElemento(document.querySelector(".contenedor-programa-calcular"))
+    }
     $(".container").append($(`
     <div class="contenedor-programa-calcular">
     <h3>Conversor de Monedas </h3>
@@ -97,6 +109,7 @@ $botonDeCalcular.addEventListener('click', () => {
     <button class="btn btn-outline-primary px-5 fs-3" id="conversion">Hacer Conversion</button>
 </div>`
     ))
+    contadorDeBotonCalcular++;
     traerValores();
     let $select = document.querySelector("#select-a-convertir")
     let $selectConvertido = document.querySelector("#select-convertido")
@@ -142,22 +155,21 @@ function traerValoresParaElConversorDeMonedas(a, b, c, d) {
         .catch(error => console.log('error', error));
 }
 
-
-/* Hay una opcion de la api que permite ingresar la moneda para convertir a determinada moneda y el valor */
-/* Mas tarde voy a crearme otra cuenta para poder tener una api xd */
-
 function traerValores() {
     fetch(`https://currency-conversion-and-exchange-rates.p.rapidapi.com/latest?from=USD&to=EUR%2CGBP%2CARS%2CUSD%2CCHF%2CJPY%2CHKD%2CCAD%2CMXN%2CCNY%2CAUD%2CBRL%2CRUB`, options)
         .then(respuesta => respuesta.json())
         .then(datos => {
-            $("#select-a-convertir").append($(`<option value="">${datos.base}</option>`))
-            $("#select-convertido").append($(`<option value="">${datos.base}</option>`))
+            $("#select-a-convertir").append($(`<option value="${datos.base}">${datos.base}</option>`))
+            $("#select-convertido").append($(`<option value="${datos.base}">${datos.base}</option>`))
             Object.keys(datos.rates).forEach((valor) => {
-                $("#select-a-convertir").append($(`<option value="">${valor}</option>`))
-                $("#select-convertido").append($(`<option value="">${valor}</option>`))
+                $("#select-a-convertir").append($(`<option value="${valor}">${valor}</option>`))
+                $("#select-convertido").append($(`<option value="${valor}">${valor}</option>`))
             })
         })
         .catch(error => console.log('error', error));
 }
 
 
+
+
+////////////// Despues debo agregarle las Pruebas Unitarias con el Console.assert(); Pero eso sera mas tarde xd
