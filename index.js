@@ -25,12 +25,17 @@ $botonDeComparar.addEventListener('click', () => {
 </div>`))
     contadorDeBotonComparar++;
     document.querySelector("#buscar").addEventListener('click', () => {
-        let valorDelInput = (document.querySelector("#input-divisa").value).toUpperCase();
-        if (contadorContenedor >= 1) {
-            eliminarEltituloDeLasDivisas();
-            eliminarElContenedorConLasDivisas();
+        let $inputDivisa = document.querySelector("#input-divisa").value
+        if (manejarErrorDelComparadorDeDivisas($inputDivisa) === 1) {
+
+        } else {
+            let valorDelInput = (document.querySelector("#input-divisa").value).toUpperCase();
+            if (contadorContenedor >= 1) {
+                eliminarEltituloDeLasDivisas();
+                eliminarElContenedorConLasDivisas();
+            }
+            traerValoresEnComparacion(valorDelInput);
         }
-        traerValoresEnComparacion(valorDelInput);
         return false;
     })
     return false
@@ -92,8 +97,8 @@ $botonDeCalcular.addEventListener('click', () => {
         <div class="contenedor-cantidad-a-convertir">
             <label class="form-label" for="">Cantidad</label>
             <div class="cantidad-a-convertir">
-                <input class="form-control" type="number" name="" id="input-convertir">
-                <select class="form-select" name="" id="select-a-convertir">
+                <input class="form-control" type="number" name="errormark1" id="input-convertir">
+                <select class="form-select" name="errormark2" id="select-a-convertir">
                 </select>
             </div>
         </div>
@@ -101,7 +106,7 @@ $botonDeCalcular.addEventListener('click', () => {
             <label class="form-label" for="">Convertido a </label>
             <div class="cantidad-convertida">
                 <input class="form-control " type="text" name="" id="input-convertido" disabled>
-                <select class="form-select" name="" id="select-convertido">
+                <select class="form-select" name="errormark3" id="select-convertido">
                 </select>
             </div>
         </div>
@@ -119,6 +124,7 @@ $botonDeCalcular.addEventListener('click', () => {
     let opcionSeleccionadaDelSelectConvertido = "";
     let valorEnTiempoRealDelInput = 0;
     let $botonConversion = document.querySelector("#conversion")
+
     $select.addEventListener('change',
         function () {
             opcionSeleccionadaDelSelectAConvertir = this.options[$select.selectedIndex].text;
@@ -136,10 +142,14 @@ $botonDeCalcular.addEventListener('click', () => {
         });
 
     $botonConversion.addEventListener("click", () => {
-        if (opcionSeleccionadaDelSelectAConvertir && opcionSeleccionadaDelSelectConvertido) {
-            traerValoresParaElConversorDeMonedas(opcionSeleccionadaDelSelectAConvertir, opcionSeleccionadaDelSelectConvertido, parseInt(valorEnTiempoRealDelInput), $inputConvertido)
+        let errorSelectConvertir = validarElSelect(opcionSeleccionadaDelSelectAConvertir)
+        let errorSelectConvertido = validarElSelect(opcionSeleccionadaDelSelectConvertido)
+        let errorInput = validarElInputNumero(valorEnTiempoRealDelInput)
+        let arrayConElResultadoDeLasValidaciones = []
+        arrayConElResultadoDeLasValidaciones.push(errorInput, errorSelectConvertir, errorSelectConvertido)
+        if (manejarErroresDelConversorDeDivisas(arrayConElResultadoDeLasValidaciones) >= 1) {
         } else {
-
+            traerValoresParaElConversorDeMonedas(opcionSeleccionadaDelSelectAConvertir, opcionSeleccionadaDelSelectConvertido, parseInt(valorEnTiempoRealDelInput), $inputConvertido)
         }
     })
 })
